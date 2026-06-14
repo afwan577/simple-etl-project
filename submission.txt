@@ -1,0 +1,26 @@
+Submission Dicoding Data Engineer - Studi Kasus Fashion Studio
+
+Konteks:
+Saya berperan sebagai data engineer pada perusahaan retail fashion dan design. Pipeline ini dibuat untuk mengambil data produk kompetitor dari Fashion Studio, membersihkan data agar siap dianalisis oleh tim data science, lalu menyimpan hasil akhirnya ke repositori data.
+
+# Menjalankan skrip ETL pipeline
+python3 main.py
+
+# Menjalankan unit test pada folder tests
+python3 -m pytest tests
+
+# Menjalankan test coverage pada folder tests
+coverage run -m pytest tests
+coverage report -m
+
+# Output utama
+products.csv
+
+# Url Google Sheets:
+Isi URL Google Sheets Anda di sini jika menggunakan Google Sheets, contoh:
+https://docs.google.com/spreadsheets/d/ISI_SPREADSHEET_ID_ANDA/edit
+
+Catatan:
+- Pipeline utama menyimpan data ke CSV.
+- Fungsi load ke Google Sheets dan PostgreSQL tersedia pada utils/load.py sebagai opsi tambahan.
+- Jika menggunakan Google Sheets, lampirkan file service account google-sheets-api.json asli dan pastikan akses Anyone with the link sebagai Editor.

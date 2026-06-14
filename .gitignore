@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Virtual environment
+venv/
+.venv/
+env/
+
+# Environment and credentials
+.env
+*.env
+google-sheets-api.json
+*-service-account.json
+*credentials*.json
+
+# Generated outputs
+products.csv
+*.log
+
+# OS/editor
+.DS_Store
+.vscode/
+.idea/
