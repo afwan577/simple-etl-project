@@ -1,10 +1,28 @@
 import pandas as pd
+import pytest
 from unittest.mock import Mock, MagicMock, patch
 
 from utils.load import (
+    save_to_csv,
     save_to_google_sheets,
     save_to_postgresql,
 )
+
+
+def test_save_to_csv_creates_file(tmp_path):
+    df = pd.DataFrame({"Title": ["T-shirt Alpha"]})
+
+    output = save_to_csv(df, tmp_path / "products.csv")
+
+    assert output.exists()
+    saved = pd.read_csv(output)
+    assert saved.loc[0, "Title"] == "T-shirt Alpha"
+
+
+def test_save_to_csv_rejects_empty_dataframe(tmp_path):
+    with pytest.raises(RuntimeError):
+        save_to_csv(pd.DataFrame(), tmp_path / "products.csv")
+
 
 def test_save_to_google_sheets():
     df = pd.DataFrame({"Title": ["Test"]})
@@ -23,11 +41,12 @@ def test_save_to_google_sheets():
             df,
             "spreadsheet-id",
             "Sheet1",
-            "credentials.json"
+            "credentials.json",
         )
 
         assert result == mock_worksheet
         mock_worksheet.clear.assert_called_once()
+        mock_worksheet.update.assert_called_once()
 
 
 def test_save_to_postgresql():
@@ -43,7 +62,7 @@ def test_save_to_postgresql():
             result = save_to_postgresql(
                 df,
                 "products",
-                "postgresql://test"
+                "postgresql://test",
             )
 
             assert result is True

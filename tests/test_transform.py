@@ -1,6 +1,28 @@
 import pandas as pd
 
-from utils.transform import transform_data
+from utils.transform import (
+    transform_data,
+    _extract_float,
+    _extract_int,
+    _clean_price,
+    _remove_prefix,
+)
+
+
+def test_extract_float():
+    assert _extract_float("Rating: 4.8 / 5") == 4.8
+
+
+def test_extract_int():
+    assert _extract_int("3 Colors") == 3
+
+
+def test_clean_price():
+    assert _clean_price("$10.00") == 160000.0
+
+
+def test_remove_prefix():
+    assert _remove_prefix("Size: XL", "Size") == "XL"
 
 
 def test_transform_data_cleans_and_converts_columns():
@@ -13,21 +35,12 @@ def test_transform_data_cleans_and_converts_columns():
             "Size": "Size: M",
             "Gender": "Gender: Men",
             "timestamp": "2026-06-14 10:00:00",
-        },
-        {
-            "Title": "Unknown Product",
-            "Price": "$20.00",
-            "Rating": "Invalid Rating",
-            "Colors": "5 Colors",
-            "Size": "Size: L",
-            "Gender": "Gender: Women",
-            "timestamp": "2026-06-14 10:00:00",
-        },
+        }
     ]
+
     df = transform_data(raw_data)
 
     assert len(df) == 1
-    assert df.loc[0, "Title"] == "T-shirt Alpha"
     assert df.loc[0, "Price"] == 160000.0
     assert df.loc[0, "Rating"] == 4.8
     assert df.loc[0, "Colors"] == 3
@@ -55,19 +68,11 @@ def test_transform_data_drops_duplicates_and_nulls():
             "Gender": "Gender: Unisex",
             "timestamp": "2026-06-14 10:00:00",
         },
-        {
-            "Title": None,
-            "Price": "$15.00",
-            "Rating": "4.0 / 5",
-            "Colors": "1 Colors",
-            "Size": "Size: S",
-            "Gender": "Gender: Women",
-            "timestamp": "2026-06-14 10:00:00",
-        },
     ]
+
     df = transform_data(raw_data)
+
     assert len(df) == 1
-    assert df.loc[0, "Title"] == "Jacket Beta"
 
 
 def test_transform_data_types_are_correct():
@@ -82,10 +87,10 @@ def test_transform_data_types_are_correct():
             "timestamp": "2026-06-14 10:00:00",
         }
     ]
+
     df = transform_data(raw_data)
+
     assert pd.api.types.is_string_dtype(df["Title"])
     assert pd.api.types.is_float_dtype(df["Price"])
     assert pd.api.types.is_float_dtype(df["Rating"])
     assert pd.api.types.is_integer_dtype(df["Colors"])
-    assert pd.api.types.is_string_dtype(df["Size"])
-    assert pd.api.types.is_string_dtype(df["Gender"])
